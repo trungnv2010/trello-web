@@ -1,6 +1,7 @@
 import {useLocation} from "react-router-dom";
 import LoginForm from "~/pages/Auth/LoginForm.jsx";
 import {Box} from "@mui/material";
+import RegisterForm from "~/pages/Auth/RegisterForm.jsx";
 
 
 const Auth = () => {
@@ -23,6 +24,7 @@ const Auth = () => {
             boxShadow: 'inset 0 0 0 2000px rgba(0, 0, 0, 0.2)'
         }}>
             {isLogin && <LoginForm />}
+            {isRegister && <RegisterForm />}
         </Box>
     )
 }

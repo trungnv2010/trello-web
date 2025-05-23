@@ -1,11 +1,10 @@
-import {useForm} from 'react-hook-form'
-import {Alert, Box, CardActions, TextField, Zoom} from "@mui/material";
-import {Card as MuiCard} from '@mui/material'
+import {useForm} from "react-hook-form";
+import {Link, useNavigate} from "react-router-dom";
+import {Box, CardActions, TextField, Zoom} from "@mui/material";
+import {Card as MuiCard} from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import LockIcon from '@mui/icons-material/Lock'
 import TrelloIcon from '~/assets/trello.svg?react'
-import {Link, useNavigate, useSearchParams} from "react-router-dom";
-import Typography from "@mui/material/Typography";
 import {
     EMAIL_RULE,
     EMAIL_RULE_MESSAGE,
@@ -15,28 +14,27 @@ import {
 } from "~/utils/validators.js";
 import FieldErrorAlert from "~/components/Form/FieldErrorAlert.jsx";
 import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 import {toast} from "react-toastify";
-import {useDispatch} from "react-redux";
-import {loginUserAPI} from "~/redux/user/userSlice.js";
+import {registerUserAPI} from "~/apis/index.jsx";
 
-const LoginForm = () => {
-    const dispatch = useDispatch()
+
+const RegisterForm = () => {
+    const {register, handleSubmit, formState: {errors}, watch} = useForm()
     const navigate = useNavigate()
-    const {register, handleSubmit, formState: {errors}} = useForm()
-    let [searchParams] = useSearchParams()
-    const registeredEmail = searchParams.get('registeredEmail')
-    const verifiedEmail = searchParams.get('verifiedEmail')
-    const submitLogin = (data) => {
+
+    const submitRegister = (data) => {
         const {email, password} = data
         toast.promise(
-            dispatch(loginUserAPI({email, password})),
-            {pending: 'Logging in...'}
-        ).then(res => {
-            if (!res.error) navigate('/')
+            registerUserAPI({email, password}),
+            {pending: 'Registration is in progress...'}
+        ).then(user => {
+            navigate(`/login?registeredEmail=${user.email}`)
         })
     }
+
     return (
-        <form onSubmit={handleSubmit(submitLogin)}>
+        <form onSubmit={handleSubmit(submitRegister)}>
             <Zoom in={true} style={{transitionDelay: '200ms'}}>
                 <MuiCard sx={{minWidth: 380, maxWidth: 380, marginTop: '6em'}}>
                     <Box sx={{
@@ -48,40 +46,12 @@ const LoginForm = () => {
                         <Avatar sx={{bgcolor: 'primary.main'}}><LockIcon/></Avatar>
                         <Avatar sx={{bgcolor: 'primary.main'}}><TrelloIcon/></Avatar>
                     </Box>
-                    <Box sx={{
-                        marginTop: '1em',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        flexDirection: 'column',
-                        padding: '0 1em'
-                    }}>
-                        {verifiedEmail &&
-                            <Alert severity="success" sx={{'.MuiAlert-message': {overflow: 'hidden'}}}>
-                                Your email&nbsp;
-                                <Typography variant="span" sx={{
-                                    fontWeight: 'bold',
-                                    '&:hover': {color: '#fdba26'}
-                                }}>{verifiedEmail}</Typography>
-                                &nbsp;has been verified.<br/>Now you can login to enjoy our services! Have a good day!
-                            </Alert>
-                        }
-                        {registeredEmail &&
-                            <Alert severity="info" sx={{'.MuiAlert-message': {overflow: 'hidden'}}}>
-                                An email has been sent to&nbsp;
-                                <Typography variant="span" sx={{
-                                    fontWeight: 'bold',
-                                    '&:hover': {color: '#fdba26'}
-                                }}>{registeredEmail}</Typography>
-                                <br/>Please check and verify your account before logging in!
-                            </Alert>
-                        }
-                    </Box>
                     <Box sx={{padding: '0 1em 1em 1em'}}>
                         <Box sx={{marginTop: '1em'}}>
                             <TextField
                                 autoFocus
                                 fullWidth
-                                label={'Enter Email...'}
+                                label={"Enter Email..."}
                                 type={'text'}
                                 variant={'outlined'}
                                 error={!!errors['email']}
@@ -98,7 +68,7 @@ const LoginForm = () => {
                         <Box sx={{marginTop: '1em'}}>
                             <TextField
                                 fullWidth
-                                label={'Enter password...'}
+                                label={'Enter Password...'}
                                 type={'password'}
                                 variant={'outlined'}
                                 error={!!errors['password']}
@@ -115,22 +85,20 @@ const LoginForm = () => {
                     </Box>
                     <CardActions sx={{padding: '0 1em 1em 1em'}}>
                         <Button
-                            className={'interceptor-loading'}
+                            className={"interceptor-loading"}
                             type={'submit'}
                             variant={'contained'}
                             color={'primary'}
                             size={'large'}
                             fullWidth
                         >
-                            Login
+                            Register
                         </Button>
                     </CardActions>
                     <Box sx={{padding: '0 1em 1em 1em', textAlign: 'center'}}>
-                        <Typography>New to Trello?</Typography>
-                        <Link to={'/register'} style={{textDecoration: 'none'}}>
-                            <Typography sx={{color: 'primary.main', '&:hover': {color: '#ffbb39'}}}>
-                                Create account!
-                            </Typography>
+                        <Typography>Already have an account?</Typography>
+                        <Link to={'/login'} style={{textDecoration: 'none'}}>
+                            <Typography sx={{color: 'primary.main', '&:hover': {color: '#ffbb39'}}}>Login!</Typography>
                         </Link>
                     </Box>
                 </MuiCard>
@@ -139,4 +107,4 @@ const LoginForm = () => {
     )
 }
 
-export default LoginForm
+export default RegisterForm
