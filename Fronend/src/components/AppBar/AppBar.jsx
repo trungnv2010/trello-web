@@ -11,6 +11,7 @@ import Templates from "~/components/Menus/Templates.jsx";
 import AutoCompleteSearchBoard from "~/components/AppBar/SearchBoards/AutoCompleteSearchBoard.jsx";
 import HelpOutlinedIcon from '@mui/icons-material/HelpOutlined';
 import ModeSelect from "~/components/ModeSelect/index.jsx";
+import Notifications from "~/components/Notifications/Notifications.jsx";
 
 const AppBar = () => {
     return (
@@ -59,6 +60,7 @@ const AppBar = () => {
             <Box sx={{display: 'flex', alignItems: 'center', gap: 2}}>
                 <AutoCompleteSearchBoard />
                 <ModeSelect/>
+                <Notifications />
                 <Tooltip title={'Help'}>
                     <HelpOutlinedIcon sx={{cursor: 'pointer', color: 'white'}} />
                 </Tooltip>

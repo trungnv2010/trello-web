@@ -35,6 +35,9 @@ export const userSlice = createSlice({
             const user = action.payload
             state.currentUser = user
         })
+        builder.addCase(logoutUserAPI.fulfilled, (state) => {
+            state.currentUser = null
+        })
     }
 })
 
