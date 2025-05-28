@@ -9,6 +9,8 @@ import http from "http";
 import {env} from '~/config/environment'
 import {CONNECT_DB, CLOSE_DB} from '~/config/mongodb'
 import {errorHandlingMiddleware} from "~/middlewares/errorHandlingMiddleware";
+import socketIo from 'socket.io'
+import {inviteUserToBoardSocket} from "~/sockets/inviteUserToBoardSocket";
 
 
 
@@ -31,6 +33,10 @@ const START_SERVER = () => {
     app.use(errorHandlingMiddleware)
 
     const server = http.createServer(app)
+    const io = socketIo(server, {cors: corsOptions})
+    io.on('connection', (socket) => {
+        inviteUserToBoardSocket(socket)
+    })
 
     if (env.BUILD_MODE === 'production') {
         console.log('this is production')

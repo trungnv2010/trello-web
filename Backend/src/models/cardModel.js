@@ -27,7 +27,7 @@ const CARD_COLLECTION_SCHEMA = Joi.object({
         commentAt: Joi.date().timestamp()
     }).default([]),
 
-    createdAt: Joi.date().timestamp('javascript').default(Data.now),
+    createdAt: Joi.date().timestamp('javascript').default(Date.now),
     updatedAt: Joi.date().timestamp('javascript').default(null),
     _destroyed: Joi.boolean().default(false)
 })
